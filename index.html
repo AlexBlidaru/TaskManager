@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-shell">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                    <rect x="2" y="2" width="8" height="8" rx="2" fill="var(--accent)"/>
+                    <rect x="12" y="2" width="8" height="8" rx="2" fill="var(--accent)" opacity=".4"/>
+                    <rect x="2" y="12" width="8" height="8" rx="2" fill="var(--accent)" opacity=".4"/>
+                    <rect x="12" y="12" width="8" height="8" rx="2" fill="var(--accent)" opacity=".2"/>
+                </svg>
+                <span class="brand-name">Tasks</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section-label">Vizualizare</div>
+                <button class="nav-item active" data-filter="all">
+                    <span class="nav-icon">◈</span> Toate
+                    <span class="nav-count" id="countAll">0</span>
+                </button>
+                <button class="nav-item" data-filter="todo">
+                    <span class="nav-icon">◇</span> În lucru
+                    <span class="nav-count" id="countTodo">0</span>
+                </button>
+                <button class="nav-item" data-filter="done">
+                    <span class="nav-icon">◆</span> Finalizate
+                    <span class="nav-count" id="countDone">0</span>
+                </button>
+                <button class="nav-item" data-filter="overdue">
+                    <span class="nav-icon">◉</span> Întârziate
+                    <span class="nav-count count-warn" id="countOverdue">0</span>
+                </button>
+
+                <div class="nav-section-label" style="margin-top:20px">Priorități</div>
+                <button class="nav-item" data-filter="high">
+                    <span class="prio-dot prio-high"></span> High
+                </button>
+                <button class="nav-item" data-filter="medium">
+                    <span class="prio-dot prio-medium"></span> Medium
+                </button>
+                <button class="nav-item" data-filter="low">
+                    <span class="prio-dot prio-low"></span> Low
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="btn-export" onclick="exportCSV()">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M8 12l-4-4h2.5V4h3v4H12L8 12zm-6 2h12v1.5H2V14z"/></svg>
+                    Export CSV
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN -->
+        <div class="main-area">
+
+            <!-- TOP BAR -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <h1 class="page-title">Workspace</h1>
+                    <span class="page-subtitle" id="pageSubtitle">Toate task-urile</span>
+                </div>
+                <div class="topbar-right">
+                    <div class="search-wrap">
+                        <svg class="search-icon" width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398l3.85 3.85a1 1 0 0 0 1.415-1.415l-3.868-3.833zm-5.242 1.156a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"/></svg>
+                        <input type="text" id="searchInput" class="search-input" placeholder="Caută task..." oninput="handleSearch(this.value)">
+                        <button class="search-clear" id="searchClear" onclick="clearSearch()" style="display:none">✕</button>
+                    </div>
+                    <button class="btn-primary" id="addTaskBtn">
+                        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 2a1 1 0 0 1 1 1v4h4a1 1 0 1 1 0 2H9v4a1 1 0 1 1-2 0V9H3a1 1 0 0 0 0-2h4V3a1 1 0 0 1 1-1z"/></svg>
+                        Nou Task
+                    </button>
+                </div>
+            </header>
+
+            <!-- TABLE AREA -->
+            <div class="table-scroll">
+                <table id="taskTable">
+                    <thead>
+                        <tr>
+                            <th class="resizable col-name" onclick="handleSort(0)">
+                                <span>TASK</span><span class="sort-arrow" data-col="0"></span>
+                                <div class="resizer" onclick="event.stopPropagation()"></div>
+                            </th>
+                            <th class="resizable col-comment" onclick="handleSort(1)">
+                                <span>COMENTARIU</span><span class="sort-arrow" data-col="1"></span>
+                                <div class="resizer" onclick="event.stopPropagation()"></div>
+                            </th>
+                            <th class="resizable col-prio" onclick="handleSort(2)">
+                                <span>PRIORITATE</span><span class="sort-arrow" data-col="2"></span>
+                                <div class="resizer" onclick="event.stopPropagation()"></div>
+                            </th>
+                            <th class="resizable col-status" onclick="handleSort(3)">
+                                <span>STATUS</span><span class="sort-arrow" data-col="3"></span>
+                                <div class="resizer" onclick="event.stopPropagation()"></div>
+                            </th>
+                            <th class="resizable col-date" onclick="handleSort(4)">
+                                <span>DEADLINE</span><span class="sort-arrow" data-col="4"></span>
+                                <div class="resizer" onclick="event.stopPropagation()"></div>
+                            </th>
+                            <th class="col-timeleft">TIMP RĂMAS</th>
+                            <th class="col-actions"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="taskBody"></tbody>
+                </table>
+
+                <!-- EMPTY STATE -->
+                <div class="empty-state" id="emptyState" style="display:none">
+                    <div class="empty-icon">◈</div>
+                    <div class="empty-title">Niciun task găsit</div>
+                    <div class="empty-sub">Apasă „Nou Task" pentru a începe</div>
+                </div>
+            </div>
+
+            <!-- STATUS BAR -->
+            <footer class="statusbar">
+                <span id="statusText">0 task-uri</span>
+                <span class="statusbar-hint">Enter = salvează · Esc = renunță</span>
+            </footer>
+        </div>
+    </div>
+
+    <!-- CONFIRM MODAL -->
+    <div class="modal-overlay" id="confirmModal" style="display:none">
+        <div class="modal-box">
+            <div class="modal-title">Șterge task?</div>
+            <div class="modal-body">Această acțiune va șterge task-ul și toate sub-task-urile sale.</div>
+            <div class="modal-actions">
+                <button class="modal-btn-cancel" onclick="closeModal()">Anulează</button>
+                <button class="modal-btn-confirm" id="confirmDeleteBtn">Șterge</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
