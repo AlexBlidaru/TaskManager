@@ -18,12 +18,12 @@ let newRowId      = null;   // used for flash animation
 // ── STATUS CONFIG ──────────────────────────────
 
 const STATUS_CONFIG = {
-    'Not Started': { bg: '#1e2535', color: '#8a96b0' },
-    'In Progress':  { bg: '#1a2e4a', color: '#4f8ef7' },
-    'Follow Up':    { bg: '#2a1e3a', color: '#c084fc' },
-    'Done':         { bg: '#0d3325', color: '#34d399' },
-    'Delayed':      { bg: '#3b1111', color: '#f87171' },
-    'Blocked':      { bg: '#2a1e0a', color: '#fb923c' },
+    'Not Started':      { bg: '#3e2723', color: '#d7ccc8' }, // Maro
+    'ME: On going':     { bg: '#003366', color: '#99ccff' }, // Albastru deschis
+    'Follow Up':        { bg: '#4a148c', color: '#f8bbd0' }, // Roz
+    'Done':             { bg: '#1b5e20', color: '#a5d6a7' }, // Verde
+    'Others: On going': { bg: '#311b92', color: '#b39ddb' }, // Mov
+    'Delayed':          { bg: '#7f1d1d', color: '#fecaca' }  // Rosu
 };
 
 const PRIORITY_CONFIG = {
